@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";

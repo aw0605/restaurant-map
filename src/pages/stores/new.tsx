@@ -6,20 +6,6 @@ import { useRouter } from "next/router";
 import AddressSearch from "@/components/AddressSearch";
 import { StoreType } from "@/interface";
 
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 export default function StoreNewPage() {
   const {
     register,

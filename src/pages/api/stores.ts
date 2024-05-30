@@ -7,13 +7,14 @@ interface ResponseType {
   limit?: string;
   q?: string;
   district?: string;
+  id?: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<StoreApiResponse | StoreType[] | StoreType | null>
 ) {
-  const { page = "", limit = "", q, district }: ResponseType = req.query;
+  const { page = "", limit = "", q, district, id }: ResponseType = req.query;
 
   if (req.method === "POST") {
     // POST요청
@@ -33,6 +34,34 @@ export default async function handler(
     });
 
     return res.status(200).json(result);
+  } else if (req.method === "PUT") {
+    // PUT 요청
+    const formData = req.body;
+    const headers = {
+      Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
+    };
+
+    const { data } = await axios.get(
+      `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURI(
+        formData.address
+      )}`,
+      { headers }
+    );
+    const result = await prisma.store.update({
+      where: { id: formData.id },
+      data: { ...formData, lat: data.documents[0].y, lng: data.documents[0].x },
+    });
+
+    return res.status(200).json(result);
+  } else if (req.method === "DELETE") {
+    // DELETE요청
+    if (id) {
+      const result = await prisma.store.delete({
+        where: { id: parseInt(id) },
+      });
+      return res.status(200).json(result);
+    }
+    return res.status(500).json(null);
   } else {
     // GET요청
     if (page) {
