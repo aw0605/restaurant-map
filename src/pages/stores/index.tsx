@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";
+import { useRouter } from "next/router";
+import { useRecoilValue } from "recoil";
+import { searchState } from "@/atom";
 
 import Loading from "@/components/Loading";
 
@@ -11,15 +14,15 @@ import Loader from "@/components/Loader";
 import SearchFilter from "@/components/SearchFilter";
 
 export default function StoreListPage() {
+  const router = useRouter();
   const ref = useRef<HTMLDivElement | null>(null);
   const pageRef = useIntersectionObserver(ref, {});
   const isPageEnd = !!pageRef?.isIntersecting;
-  const [q, setQ] = useState<string | null>(null);
-  const [district, setDistrict] = useState<string | null>(null);
+  const searchValue = useRecoilValue(searchState);
 
   const searchParams = {
-    q: q,
-    district: district,
+    q: searchValue?.q,
+    district: searchValue?.district,
   };
 
   const fetchStores = async ({ pageParam = 1 }) => {
@@ -74,15 +77,19 @@ export default function StoreListPage() {
 
   return (
     <div className="px-4 md:max-w-4xl mx-auto py-8">
-      <SearchFilter setQ={setQ} setDistrict={setDistrict} />
+      <SearchFilter />
       <ul role="list" className="divide-y divide-gray-100">
         {isLoading ? (
           <Loading />
         ) : (
           stores?.pages?.map((page, index) => (
             <React.Fragment key={index}>
-              {page.data.map((store: StoreType, i: any) => (
-                <li className="flex justify-between gap-x-6 py-5" key={i}>
+              {page.data.map((store: StoreType, i: number) => (
+                <li
+                  className="flex justify-between gap-x-6 py-5 cursor-pointer hover:bg-gray-50"
+                  key={i}
+                  onClick={() => router.push(`/stores/${store.id}`)}
+                >
                   <div className="flex gap-x-4">
                     <Image
                       src={
