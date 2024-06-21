@@ -96,7 +96,7 @@ export default async function handler(
         },
         include: {
           likes: {
-            where: session ? { userId: session.user.id } : undefined,
+            where: session ? { userId: session.user.id } : {},
           },
         },
       });

@@ -8,6 +8,7 @@ import Loader from "@/components/Loader";
 import Map from "@/components/Map";
 import Marker from "@/components/Marker";
 import { toast } from "react-toastify";
+import Like from "@/components/Like";
 
 export default function StoreDetailPage() {
   const router = useRouter();
@@ -73,8 +74,11 @@ export default function StoreDetailPage() {
               {store?.address}
             </p>
           </div>
-          {status === "authenticated" && (
+          {status === "authenticated" && store && (
             <div className="flex items-center gap-4 px-4 py-3">
+              <div className="mb-3">
+                <Like storeId={store?.id} />
+              </div>
               <Link
                 className="underline hover:text-gray-400 text-sm"
                 href={`/stores/${store?.id}/edit`}
