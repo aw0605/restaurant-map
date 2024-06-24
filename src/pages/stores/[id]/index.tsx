@@ -3,12 +3,13 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 import { StoreType } from "@/interface";
 import Loader from "@/components/Loader";
 import Map from "@/components/Map";
 import Marker from "@/components/Marker";
-import { toast } from "react-toastify";
 import Like from "@/components/Like";
+import Comments from "@/components/comments";
 
 export default function StoreDetailPage() {
   const router = useRouter();
@@ -158,10 +159,13 @@ export default function StoreDetailPage() {
         </div>
       </div>
       {isSuccess && (
-        <div className="overflow-hidden w-full mb-20 max-w-5xl mx-auto max-h-[600px]">
-          <Map lat={store?.lat} lng={store?.lng} zoom={1} />
-          <Marker store={store} />
-        </div>
+        <>
+          <div className="overflow-hidden w-full mb-20 max-w-5xl mx-auto max-h-[600px]">
+            <Map lat={store?.lat} lng={store?.lng} zoom={1} />
+            <Marker store={store} />
+          </div>
+          <Comments storeId={store.id} />
+        </>
       )}
     </>
   );
