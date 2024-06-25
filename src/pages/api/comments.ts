@@ -17,6 +17,13 @@ export default async function handler(
   res: NextApiResponse<CommentInterface | CommentApiResponse>
 ) {
   const session = await getServerSession(req, res, authOptions);
+  const {
+    id = "",
+    page = "1",
+    limit = "10",
+    storeId = "",
+    user = false,
+  }: ResponseType = req.query;
 
   if (req.method === "POST") {
     if (!session?.user) {
@@ -34,6 +41,44 @@ export default async function handler(
 
     return res.status(200).json(comment);
   } else if (req.method === "DELETE") {
+    if (!session?.user || !id) {
+      return res.status(401);
+    }
+
+    const result = await prisma.comment.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    return res.status(200).json(result);
   } else {
+    const skipPage = parseInt(page) - 1;
+    const count = await prisma.comment.count({
+      where: {
+        storeId: storeId ? parseInt(storeId) : {},
+        userId: user ? session?.user.id : {},
+      },
+    });
+
+    const comments = await prisma.comment.findMany({
+      orderBy: { createdAt: "desc" },
+      where: {
+        storeId: storeId ? parseInt(storeId) : {},
+        userId: user ? session?.user.id : {},
+      },
+      skip: skipPage * parseInt(limit),
+      take: parseInt(limit),
+      include: {
+        user: true,
+        store: true,
+      },
+    });
+
+    return res.status(200).json({
+      data: comments,
+      page: parseInt(page),
+      totalPage: Math.ceil(count / parseInt(limit)),
+    });
   }
 }

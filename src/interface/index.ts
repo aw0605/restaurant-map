@@ -24,18 +24,27 @@ export interface LikeApiResponse {
   totalPage?: number;
 }
 
+interface UserType {
+  id: number;
+  email: string;
+  name?: string | null;
+  image?: string | null;
+}
+
 export interface CommentInterface {
   id: number;
   storeId: number;
   userId: number;
   store?: StoreType;
   body: string;
+  user?: UserType;
+  createdAt: Date;
 }
 
 export interface CommentApiResponse {
-  page?: number;
-  data: LikesInterface[];
+  data: CommentInterface[];
   totalPage?: number;
+  page?: number;
 }
 
 export interface StoreApiResponse {
