@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { StoreApiResponse, StoreType } from "@/interface";
 import prisma from "@/db";
 import axios from "axios";
 
@@ -61,7 +59,6 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  // 데이터 생성을 처리한다
   const formData = await req.json();
   const headers = {
     Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
@@ -82,7 +79,6 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  // 데이터 수정을 처리한다
   const formData = await req.json();
   const headers = {
     Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
@@ -109,7 +105,6 @@ export async function DELETE(req: Request) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
 
-  // 데이터 삭제
   if (id) {
     const result = await prisma.store.delete({
       where: {
