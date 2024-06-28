@@ -1,14 +1,16 @@
+"use client";
+
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useQuery } from "react-query";
 import { CATEGORY_ARR, STORE_TYPE_ARR, FOOD_CERTIFY_ARR } from "@/data/store";
 import Loader from "@/components/Loader";
 import AddressSearch from "@/components/AddressSearch";
 import { StoreType } from "@/interface";
 
-export default function StoreEditPage() {
+export default function StoreEditPage({ params }: { params: { id: string } }) {
   const {
     register,
     handleSubmit,
@@ -17,7 +19,7 @@ export default function StoreEditPage() {
   } = useForm<StoreType>();
 
   const router = useRouter();
-  const { id } = router.query;
+  const id = params.id;
 
   const fetchStore = async () => {
     const { data } = await axios(`/api/stores?id=${id}`);

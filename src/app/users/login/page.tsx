@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
 import { RiKakaoTalkFill } from "react-icons/ri";
@@ -44,13 +46,14 @@ export default function LoginPage() {
           >
             <SiNaver className="w-4 h-4" /> Sign in with Naver
           </button>
-          <button
+          {/* kakao 로그인 동의항목 심사에 의해 이메일 제공 불가로 카카오 로그인 불가 */}
+          {/* <button
             type="button"
             className="text-gray-700 flex gap-2 bg-[#fedc1b] hover:bg=[#fedc1b]/90 font-medium rounded-lg w-full px-5 py-4 text-center items-center justify-center"
             onClick={() => signIn("kakao", { callbackUrl: "/" })}
           >
             <RiKakaoTalkFill className="w-5 h-5" /> Sign in with Kakao
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

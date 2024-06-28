@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useQuery } from "react-query";
 import axios from "axios";
 import Link from "next/link";
@@ -11,9 +13,14 @@ import Marker from "@/components/Marker";
 import Like from "@/components/Like";
 import Comments from "@/components/comments";
 
-export default function StoreDetailPage() {
+interface ParamsProps {
+  params: { id: string };
+  searchParams: { page: string };
+}
+
+export default function StoreDetailPage({ params, searchParams }: ParamsProps) {
   const router = useRouter();
-  const { id } = router.query;
+  const id = params.id;
   const { status } = useSession();
 
   const fetchStore = async () => {
@@ -164,7 +171,7 @@ export default function StoreDetailPage() {
             <Map lat={store?.lat} lng={store?.lng} zoom={1} />
             <Marker store={store} />
           </div>
-          <Comments storeId={store.id} />
+          <Comments storeId={store.id} page={searchParams.page} />
         </>
       )}
     </>

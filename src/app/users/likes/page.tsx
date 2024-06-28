@@ -1,14 +1,18 @@
-import Loading from "@/components/Loading";
-import StoreList from "@/components/StoreList";
-import { LikeApiResponse, LikesInterface } from "@/interface";
+"use client";
+
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useRouter } from "next/router";
+import Loading from "@/components/Loading";
+import StoreList from "@/components/StoreList";
 import Pagination from "@/components/Pagination";
+import { LikeApiResponse, LikesInterface } from "@/interface";
 
-export default function LikesPage() {
-  const router = useRouter();
-  const { page = "1" }: any = router.query;
+export default function LikesPage({
+  searchParams,
+}: {
+  searchParams: { page: string };
+}) {
+  const page = searchParams?.page || "1";
 
   const fetchLikes = async () => {
     const { data } = await axios(`/api/likes?limit=10&page=${page}`);
@@ -19,6 +23,7 @@ export default function LikesPage() {
     data: likes,
     isError,
     isLoading,
+    isSuccess,
   } = useQuery(`likes-${page}`, fetchLikes);
 
   if (isError) {
@@ -40,6 +45,11 @@ export default function LikesPage() {
           likes?.data.map((like: LikesInterface, index) => (
             <StoreList i={index} store={like.store} key={index} />
           ))
+        )}
+        {isSuccess && !!!likes.data.length && (
+          <div className="p-4 border border-gray-200 rounded-md text-sm text-gray-400">
+            찜한 맛집이 없습니다.
+          </div>
         )}
       </ul>
       <Pagination

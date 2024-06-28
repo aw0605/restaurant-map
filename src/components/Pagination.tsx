@@ -8,7 +8,7 @@ interface Pagination {
 
 export default function Pagination({ total = 0, page, pathname }: Pagination) {
   return (
-    <div className="py-6 px-10 w-full flex justify-center gap-3 bg-white my-10 flex-wrap">
+    <div className="py-6 w-full px-10 flex justify-center gap-3 bg-white my-10 flex-wrap text-black">
       {total <= 10 ? (
         [...Array(total)].map((x, i) => (
           <Link href={{ pathname: pathname, query: { page: i + 1 } }} key={i}>
